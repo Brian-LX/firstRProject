@@ -1,0 +1,52 @@
+---
+title: "Assignment1RMarkdown"
+author: "Xian Lai"
+date: "2024-09-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Wave plot
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+# Define the vector x
+x <- seq(from = 0, to = 20, by = 0.01)
+
+# Print the first few elements of x to verify
+head(x)
+```
+
+```{r}
+# Create the vector y, where each element is the sine of the corresponding element in x
+y <- sin(x)
+
+# Print the first few elements of y to verify
+head(y)
+```
+
+```{r}
+# Create the data frame sin_df with two columns: x and y
+sin_df <- data.frame(x = x, y = y)
+
+# Inspect the first few rows of the data frame
+head(sin_df,3)
+```
+
+
+```{r}
+# Plot sin_df with x as the x-axis and y as the y-axis
+plot(sin_df$x, sin_df$y, type = "l", col = "blue", 
+     xlab = "x", ylab = "sin(x)", main = "Plot of sin(x)")
+# sin_df$x: Refers to the x column in the data frame.
+# sin_df$y: Refers to the y column in the data frame (the sine of x values).
+```
+$$ \sin^2(x) + \cos^2(x) = 1 $$
+
+

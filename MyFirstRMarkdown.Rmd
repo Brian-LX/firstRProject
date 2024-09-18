@@ -1,0 +1,138 @@
+---
+title: "MyFirstRMarkdown"
+author: "Xian Lai"
+date: "2024-09-18"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r}
+# Create the vectors
+ani <- c("Snake", "Ostrich", "Cat", "Spider")
+num <- c(0, 2, 4, 8)
+
+# Combine into a data frame
+animals_df <- data.frame(ani, num)
+```
+
+
+## Including Plots
+
+You can also embed plots, for example:
+
+```{r}
+# Print the data frame
+animals_df
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+```{r}
+# Generate a sequence from 12 to 2 with steps of -2
+x_vect <- seq(from = 12, to = 2, by = -2)
+
+# Print the vector
+x_vect
+
+```
+```{r}
+X <- matrix(x_vect, 2,3)
+X
+```
+
+
+```{r}
+Y <- matrix(seq(4),2,2)
+Y
+```
+
+```{r}
+# Create the 2x2 matrix Z
+Z <- matrix(c(4, 6, 8, 10), nrow = 2, ncol = 2)
+
+# Print the matrix
+Z
+```
+
+```{r}
+# Compute the transpose of matrix Y
+Y_transposed <- t(Y)
+
+# Print the transposed matrix
+Y_transposed
+```
+
+```{r}
+# Compute the transpose of matrix Y
+Z_transposed <- t(Z)
+
+# Print the transposed matrix
+Z_transposed
+```
+```{r}
+# Compute the sum of matrices Y and Z
+sum_Y_Z <- Y + Z
+
+# Print the result
+sum_Y_Z
+
+```
+
+
+```{r}
+# Compute the matrix product Y * Z
+YZ <- Y %*% Z
+
+# Print the result
+YZ
+```
+
+```{r}
+# Compute the matrix product Z * Y
+ZY <- Z %*% Y
+
+# Print the result
+ZY
+```
+
+```{r}
+# Compute the matrix product Y * X
+YX <- Y %*% X
+
+# Print the result
+YX
+```
+```{r}
+# Compute the matrix product X * Y
+XY <- X %*% Y
+
+# Print the result
+XY # Error in X %*% Y : 非整合参数
+```
+
+```{r}
+# Compute the element-wise matrix multiplication Y * Z
+element_wise_product <- Y * Z
+
+# Print the result
+element_wise_product
+```
+```{r}
+Y_1 <- solve(Y)
+Y_1
+
+```
+```{r}
+Y_1X <- Y_1 %*% X
+Y_1X
+```
