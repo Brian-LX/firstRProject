@@ -1,0 +1,140 @@
+---
+title: "Assignment 2"
+author: "Insert My Name"
+date: "2024-09-25"
+output: html_document # you can change to other output format if you want
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# 1. Data Wrangling
+
+
+## 1.1 (Q1)   
+
+<!-- Include your answers for each question under a second level heading eg ## 1.1 (Q1) -->
+**** insert your solutions here *****
+
+```{r}
+library(tidyverse)
+library(Stat2Data)
+data("Hawks")
+colnames(Hawks)
+# Assume the original data frame is called Hawks
+# Create the new data frame hSF with the required columns and conditions
+hSF <- Hawks %>%
+  filter(Species == "RT" & Weight >= 1000) %>%
+  select(Wing, Weight, Tail)           # Select the specified columns
+hSF
+```
+
+## 1.1 (Q2)   
+How many variables does the data frame hSF have? What would you say to communicate this information to a Machine Learning practitioner?
+
+The data frame hSF has 3 variables (or features/columns). These variables are:
+Wing: The wing measurement of the hawks.
+Weight: The weight of the hawks.
+Tail: The tail measurement of the hawks.
+
+To a Machine Learning (ML) practitioner, you can say:
+The data frame hSF contains 3 features (variables): Wing, Weight, and Tail. These are the input attributes (or dimensions) of each data point that can be used for model training or analysis.
+
+How many examples does the data frame hSF have? How many observations? How 
+many cases?
+
+## 1.2 (Q1)
+
+```{r}
+# Sort the hSF data frame by increasing wing span (column "Wing")
+hSF_sorted <- hSF %>%
+  arrange(Wing)
+
+# Print the top five rows of the sorted data frame
+head(hSF_sorted, 5)
+```
+## 1.3 (Q1)
+```{R}
+# Create the hawkSpeciesNameCodes data frame
+hawkSpeciesNameCodes <- data.frame(
+  species_code = c("CH", "RT", "SS"),                    # Species codes
+  species_name_full = c("Cooper's", "Red-tailed", "Sharp-shinned")  # Full species names
+)
+
+# Print the data frame to check
+print(hawkSpeciesNameCodes)
+```
+
+```{r}
+# Perform a left join to combine Hawks with hawkSpeciesNameCodes
+hawksFullName <- Hawks %>%
+  left_join(hawkSpeciesNameCodes, by = c("Species" = "species_code")) %>%  # Join on the species code
+  select(-Species) %>%  # Remove the original Species column
+  rename(Species = species_name_full)  # Rename the new column to Species
+
+# Print the resulting data frame to check
+print(hawksFullName)
+
+```
+
+
+## 1.3 (Q3)
+```{r}
+# Use select() to choose specific columns and head() to print the top seven rows
+top_seven_hawks <- hawksFullName %>%
+  select(Species, Wing, Weight) %>%  # Select the specified columns
+  head(7)                             # Get the top seven rows
+
+# Print the result
+print(top_seven_hawks)
+```
+## 1.4 (Q1)
+```{r}
+# Calculate Bird-BMI and create the new data frame
+hawksWithBMI <- Hawks %>%
+  mutate(Bird_BMI = 1000 * Weight / (Wing^2)) %>%  # Calculate Bird-BMI
+  select(Species, Bird_BMI) %>%                     # Select only the Species and Bird-BMI columns
+  arrange(desc(Bird_BMI))                           # Arrange in descending order of Bird-BMI
+
+# Print the resulting data frame to check
+print(hawksWithBMI)
+
+```
+
+## 1.5 (Q1)
+```{r}
+# Create the summary table by Hawk species
+summary_table <- Hawks %>%
+  group_by(Species) %>%  # Group by Hawk species
+  summarize(
+    num_rows = n(),                                  # Count the number of rows
+    mn_wing = mean(Wing, na.rm = TRUE), # na.rm = TRUE: 只对存在的有效数据进行操作  # Calculate the average wing span
+    nd_wing = median(Wing, na.rm = TRUE),           # Calculate the median wing span
+    t_mn_wing = mean(Wing, trim = 0.1, na.rm = TRUE), # Calculate the trimmed mean wing span
+    b_wt_ratio = max(Wing / Tail, na.rm = TRUE)     # Calculate the biggest ratio between wing span and tail length
+  )
+
+# Print the summary table to check
+print(summary_table)
+```
+
+```{r}
+
+```
+....
+
+# 2. Random experiments, events and sample spaces, and the set theory
+
+....
+
+# 3. Probability theory
+
+## 3 (Q1)
+
+## 3 (Q2)
+
+.....
+
+
+
