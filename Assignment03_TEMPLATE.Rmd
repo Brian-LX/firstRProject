@@ -1,0 +1,194 @@
+---
+title: "Assignment03_TEMPLATE"
+author: "Xian Lai"
+date: "2024-10-02"
+output: html_document
+---
+
+
+<!-- We need to load two packages, namely “Stat2Data” and “tidyverse” -->
+
+```{r}
+library(tidyverse)
+library(Stat2Data)
+data("Hawks")
+
+```
+# 1. Visualisation
+
+## 1. (Q1)
+
+<!--  about visualisation using ggplot2 -->
+
+```{r}
+hawksSmall<- drop_na(select(Hawks,Age,Day,Month,Year,CaptureTime,Species,Wing,Weight,Tail))
+# Check the dimensions (rows and columns) of hawksSmall
+dim(hawksSmall)
+
+# Display the first 5 rows of hawksSmall
+head(hawksSmall, 5)
+```
+## 1. (Q2)
+
+```{r}
+# Load the ggplot2 package if not already loaded
+library(ggplot2)
+
+# Create a histogram of hawks' weights with a bin width of 10
+ggplot(hawksSmall, aes(x = Weight)) +
+  geom_histogram(binwidth = 10, fill = "blue", color = "black") +
+  labs(title = "Histogram of Hawk Weights",
+       x = "Weight",
+       y = "Count") +
+  theme_minimal()
+
+
+
+```
+## 1. (Q3)
+```{r}
+# 创建两个不同 adjust 参数的密度图
+ggplot(hawksSmall, aes(x = Tail)) +
+  geom_density(adjust = 0.5, color = "red", fill = "red", alpha = 0.3) +  # adjust = 0.5
+  geom_density(adjust = 2, color = "blue", fill = "blue", alpha = 0.3) +  # adjust = 2
+  labs(title = "Density map of eagle tail length",
+       x = "tail lengths",
+       y = "density") +
+  theme_minimal()
+
+
+
+
+```
+## 1. (Q4)
+Based on the answer from (Q3), create density plot based on 3 species.
+
+```{r}
+# Three species, CH, RT and SS, were screened
+hawks_filtered <- subset(hawksSmall, Species %in% c("CH", "RT", "SS"))
+
+# Plot tail length density based on CH, RT, and SS species
+ggplot(hawks_filtered, aes(x = Tail, color = Species, fill = Species)) +
+  geom_density(alpha = 0.4, adjust = 2) +  # adjust=1
+  labs(title = "Tail length density of eagle in CH, RT, SS species",
+       x = "tail lengths",
+       y = "density") +
+  theme_minimal()
+
+
+```
+
+## 1. (Q5) Violin plot:
+<!--  Use the ggplot and geom_violin() functions to create the following violin plot for the three species. -->
+```{r}
+ggplot(hawks_filtered, aes(x = Tail, y = Species, fill = Species)) +
+  geom_violin(trim = TRUE, adjust = 1) +  # Use the violin diagram with clipping the tail
+  labs(title = "Violin diagram of tail length of different species of eagle",
+       x = "Species (mm)",
+       y = "Tail Lengths") +
+  theme_minimal()
+
+```
+## 1. (Q6) Scatter plot
+<!-- Generate a plot similar to the following plot using the ggplot() and geom_point() functions.
+1. How many aesthetics are present within the following plot?
+2. What are the glyphs within this plot?
+3. What are the visual cues being used within this plot
+-->
+```{r}
+# Create a scatter plot using geom_point()
+ggplot(hawks_filtered, aes(x = Tail, y = Weight, color = Species, shape=Species)) +
+  geom_point(position = position_jitter(width = 0.2), size = 3) +
+  labs(title = "Scatter plot of tail length of different species of eagle",
+       x = "Species",
+       y = "Tail Lengths") +
+  theme_minimal()
+```
+## 1. (Q7) Trend lines and facet wraps:
+<!-- Generate the following plot using the ggplot(), geom_point(), geom_smooth() and 
+facet_wrap() functions. Note that in the facet plot, the three panels use different 
+scales. 
+1. What are the visual cues being used within this plot?
+2. Based on the plot below, what can we say about the relationship between the weight of the hawks and their tail lengths?
+-->
+
+```{r}
+ggplot(hawks_filtered, aes(x = Tail, y = Weight, color = Species)) + 
+  geom_point(size = 2, position = position_jitter(width = 0.2)) +  # 散点
+  geom_smooth(method = "lm", se = FALSE) +  # 添加线性回归线
+  facet_wrap(~ Species) +  # 按物种分面，使用不同的坐标轴比例
+  labs(title = "Relationship between tail length and weight in 3 species",
+       x = "Tail (mm)", 
+       y = "Weight") +
+  theme_minimal() +
+  theme(strip.background = element_rect(fill = "lightgray")) 
+
+
+
+```
+## 1. (Q8) Adding annotations
+<!-- First, compute the “Weight” and the “Tail” of the heaviest hawk in the dataset. You 
+can use filter() and select() function to select proper data. 
+Second, reuse the code that you create from Q(3), adding an arrow and an 
+annotation to indicate the heaviest hawk. Your result should look similar to this.
+-->
+```{r}
+library(dplyr)
+
+# 找到最重的鹰，并提取 Weight 和 Tail 列
+heaviest_hawk <- hawksSmall %>%
+  filter(Weight == max(Weight)) %>%  # 找到最大体重的鹰
+  select(Weight, Tail)  # 选择 Weight 和 Tail 列
+
+# 查看结果
+print(heaviest_hawk)
+
+
+```
+```{r}
+# 找到最重的鹰
+heaviest_hawk <- hawks_filtered %>%
+  filter(Weight == max(Weight))  # 筛选出最重的鹰
+
+# 创建散点图
+ggplot(hawks_filtered, aes(x = Tail, y = Weight, color = Species, shape = Species)) +
+  geom_point(position = position_jitter(width = 0.2), size = 3) +
+  labs(title = "Tail lengths of different species",
+       x = "Tail",
+       y = "Weight") +
+  theme_minimal() +
+  # 添加箭头指向最重的鹰
+  geom_segment(aes(x = heaviest_hawk$Tail, y = heaviest_hawk$Weight,
+                   xend = heaviest_hawk$Tail + 5, yend = heaviest_hawk$Weight + 5), 
+               arrow = arrow(length = unit(0.1, "inches")), 
+               color = "red", size = 1) +
+  # 添加注释
+  annotate("text", x = heaviest_hawk$Tail + 5, y = heaviest_hawk$Weight + 5,
+           label = paste("Heaviest Hawk"),
+           color = "red", size = 4, hjust = 0)
+```
+# 2. Finite probability spaces
+## 2.1 Sampling with replacement
+Recall that for positive integers 𝑛 and 𝑘, $(\frac{𝑛}{𝑘}) =\frac{𝑛!}{𝑘!(𝑛−𝑘)!}$ gives the number of subsets of size 𝑘 from a set of 𝑛 objects.
+You can compute this number straightforwardly within “R” via the choose function “choose()”
+
+```{r}
+# 计算从 8 个对象中选择 3 个对象的组合数
+n <- 8  # 集合大小
+k <- 3  # 子集大小
+
+# 使用 choose 函数计算组合数
+num_combinations <- choose(n, k)
+
+# 打印结果
+print(num_combinations)
+```
+### (Q1) 
+<!-- Write down a mathematical expression for the probability that 𝑧 out of the 22
+selections were red spheres (here 𝑧 ∈ {0,1, ⋯ ,22}).-->
+<!-- You can try writing down your mathematical expression using “LaTex” code in your 
+R markdown file, making use of the LaTex functions “binom{”{}} and “frac{”{}}. For 
+information about writing mathematical formulae in Rmarkdown documents, find 
+illustrative examples in “Assignment_R MarkdownMathformulasandSymbolsExamples.rmd”--> 
+
+
